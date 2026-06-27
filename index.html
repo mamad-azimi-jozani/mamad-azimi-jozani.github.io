@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mohammad Azimi — DevOps Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0e13;
+    --surface:#10151d;
+    --surface2:#161d27;
+    --line:#222b36;
+    --text:#e9eef2;
+    --muted:#7c8a99;
+    --accent:#4ee6c8;
+    --accent-dim:#2a8c79;
+    --warn:#ff9b5a;
+    --mono:'JetBrains Mono', monospace;
+    --disp:'Space Grotesk', sans-serif;
+    --body:'Inter', sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--body);
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--accent);color:#06100e;}
+
+  a{color:var(--accent);text-decoration:none;}
+
+  /* background grid */
+  .bg-grid{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background-image:
+      linear-gradient(rgba(78,230,200,0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(78,230,200,0.045) 1px, transparent 1px);
+    background-size:44px 44px;
+    mask-image:radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 75%);
+  }
+  .glow{
+    position:fixed; z-index:0; pointer-events:none; filter:blur(90px); opacity:.35;
+    width:600px;height:600px;border-radius:50%;
+    background:radial-gradient(circle, var(--accent), transparent 70%);
+    top:-220px; left:50%; transform:translateX(-50%);
+  }
+
+  nav{
+    position:fixed; top:0; left:0; right:0; z-index:50;
+    display:flex; justify-content:space-between; align-items:center;
+    padding:18px 6vw;
+    backdrop-filter:blur(10px);
+    background:rgba(10,14,19,0.65);
+    border-bottom:1px solid var(--line);
+  }
+  .brand{
+    font-family:var(--mono); font-size:.95rem; color:var(--text); letter-spacing:.5px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .brand .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent);animation:pulse 2s infinite;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+  .navlinks{display:flex;gap:28px;font-family:var(--mono);font-size:.82rem;color:var(--muted);}
+  .navlinks a{color:var(--muted);transition:color .2s;}
+  .navlinks a:hover{color:var(--accent);}
+  .navlinks .resume-btn{
+    color:var(--bg); background:var(--accent); padding:7px 14px; border-radius:4px; font-weight:600;
+  }
+  .navlinks .resume-btn:hover{color:var(--bg); background:#6ff0d6;}
+  .menu-toggle{display:none;background:none;border:none;color:var(--text);font-size:1.4rem;cursor:pointer;}
+
+  section{position:relative; z-index:1; padding:120px 6vw 80px;}
+
+  /* HERO */
+  .hero{
+    min-height:100vh; display:flex; flex-direction:column; justify-content:center;
+    padding-top:90px;
+  }
+  .eyebrow{
+    font-family:var(--mono); color:var(--accent); font-size:.85rem; letter-spacing:1px;
+    display:flex; align-items:center; gap:10px; margin-bottom:22px;
+  }
+  .eyebrow::before{content:'';width:22px;height:1px;background:var(--accent);display:inline-block;}
+  h1.title{
+    font-family:var(--disp); font-weight:700; line-size:1; letter-spacing:-2px;
+    font-size:clamp(2.6rem, 7vw, 5.4rem); line-height:1.02; color:var(--text);
+  }
+  h1.title .accent{color:var(--accent);}
+  .typed-wrap{
+    font-family:var(--mono); font-size:clamp(1rem,2vw,1.3rem); color:var(--muted); margin-top:22px;
+    display:flex; gap:10px; align-items:center;
+  }
+  .typed-wrap .prompt{color:var(--accent);}
+  #typed{color:var(--text);}
+  .cursor{display:inline-block;width:9px;height:1.1em;background:var(--accent);animation:blink 1s infinite step-end;vertical-align:-2px;}
+  @keyframes blink{50%{opacity:0;}}
+  .hero-sub{
+    max-width:640px; color:var(--muted); font-size:1.05rem; line-height:1.7; margin-top:28px;
+  }
+  .hero-cta{display:flex; gap:16px; margin-top:38px; flex-wrap:wrap;}
+  .btn{
+    font-family:var(--mono); font-size:.85rem; padding:13px 24px; border-radius:5px; cursor:pointer;
+    border:1px solid var(--line); color:var(--text); transition:all .25s; display:inline-flex; align-items:center; gap:8px;
+  }
+  .btn.primary{background:var(--accent); color:#06100e; border-color:var(--accent); font-weight:600;}
+  .btn.primary:hover{background:#6ff0d6; box-shadow:0 0 24px rgba(78,230,200,.35);}
+  .btn.ghost:hover{border-color:var(--accent); color:var(--accent);}
+
+  /* topology animation */
+  .topo{
+    position:absolute; right:4vw; top:50%; transform:translateY(-50%);
+    width:min(38vw, 460px); opacity:.9;
+  }
+  @media (max-width:980px){.topo{display:none;}}
+  .topo svg{width:100%;height:auto;}
+  .node{fill:var(--surface2); stroke:var(--accent); stroke-width:1.5;}
+  .node-core{fill:rgba(78,230,200,.12); stroke:var(--accent);}
+  .edge{stroke:var(--accent); stroke-opacity:.35; stroke-width:1;}
+  .pkt{fill:var(--accent); filter:drop-shadow(0 0 4px var(--accent));}
+
+  .scroll-cue{
+    position:absolute; bottom:34px; left:6vw; font-family:var(--mono); font-size:.72rem; color:var(--muted);
+    display:flex; align-items:center; gap:8px;
+  }
+  .scroll-cue .line{width:1px;height:28px;background:linear-gradient(var(--accent), transparent); animation:scrollline 1.6s infinite;}
+  @keyframes scrollline{0%{transform:scaleY(0);transform-origin:top;}50%{transform:scaleY(1);transform-origin:top;}100%{transform:scaleY(0);transform-origin:bottom;}}
+
+  /* section heading */
+  .sec-head{display:flex; align-items:baseline; gap:16px; margin-bottom:46px;}
+  .sec-num{font-family:var(--mono); color:var(--accent); font-size:.85rem;}
+  .sec-title{font-family:var(--disp); font-size:clamp(1.6rem,3vw,2.3rem); font-weight:600;}
+  .sec-rule{flex:1; height:1px; background:var(--line);}
+
+  .reveal{opacity:0; transform:translateY(26px); transition:opacity .7s ease, transform .7s ease;}
+  .reveal.in{opacity:1; transform:translateY(0);}
+
+  /* ABOUT */
+  .about-grid{display:grid; grid-template-columns:1.2fr .8fr; gap:60px; align-items:start;}
+  @media (max-width:860px){.about-grid{grid-template-columns:1fr;}}
+  .about-text p{color:#c7d0d8; line-height:1.85; font-size:1.02rem; margin-bottom:18px;}
+  .about-text strong{color:var(--accent); font-weight:600;}
+  .meta-card{
+    background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:24px;
+  }
+  .meta-row{display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--line); font-size:.9rem;}
+  .meta-row:last-child{border-bottom:none;}
+  .meta-row .k{color:var(--muted); font-family:var(--mono); font-size:.78rem;}
+  .meta-row .v{color:var(--text); text-align:right;}
+
+  /* EXPERIENCE timeline */
+  .timeline{position:relative; padding-left:34px; border-left:1px solid var(--line);}
+  .tl-item{position:relative; margin-bottom:48px;}
+  .tl-item:last-child{margin-bottom:0;}
+  .tl-dot{
+    position:absolute; left:-40px; top:4px; width:14px;height:14px;border-radius:50%;
+    background:var(--bg); border:2px solid var(--accent);
+  }
+  .tl-dot::after{content:'';position:absolute;inset:3px;border-radius:50%;background:var(--accent);opacity:.5;}
+  .tl-head{display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px; align-items:baseline;}
+  .tl-role{font-family:var(--disp); font-size:1.25rem; font-weight:600;}
+  .tl-date{font-family:var(--mono); font-size:.78rem; color:var(--accent); background:rgba(78,230,200,.08); padding:4px 10px; border-radius:4px; white-space:nowrap;}
+  .tl-org{color:var(--muted); font-size:.92rem; margin-top:4px; font-family:var(--mono);}
+  .tl-list{margin-top:16px; display:flex; flex-direction:column; gap:10px;}
+  .tl-list li{list-style:none; color:#c7d0d8; font-size:.95rem; line-height:1.6; padding-left:20px; position:relative;}
+  .tl-list li::before{content:'▸'; position:absolute; left:0; color:var(--accent);}
+
+  /* SKILLS */
+  .skill-groups{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:28px;}
+  .skill-card{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:22px; transition:border-color .25s, transform .25s;}
+  .skill-card:hover{border-color:var(--accent-dim); transform:translateY(-4px);}
+  .skill-card h4{font-family:var(--mono); color:var(--accent); font-size:.82rem; margin-bottom:14px; letter-spacing:.5px;}
+  .tag-row{display:flex; flex-wrap:wrap; gap:8px;}
+  .tag{font-family:var(--mono); font-size:.76rem; color:#c7d0d8; background:var(--surface2); border:1px solid var(--line); padding:5px 10px; border-radius:5px;}
+
+  /* EDUCATION */
+  .edu-card{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:28px; display:flex; gap:24px; flex-wrap:wrap; justify-content:space-between;}
+  .edu-card h4{font-family:var(--disp); font-size:1.2rem; font-weight:600; margin-bottom:6px;}
+  .edu-card .org{color:var(--muted); font-size:.92rem;}
+  .edu-card .note{color:#9aa6b0; font-size:.85rem; margin-top:10px; max-width:520px; line-height:1.6;}
+  .edu-side{font-family:var(--mono); font-size:.8rem; color:var(--accent); text-align:right; white-space:nowrap;}
+
+  /* CONTACT */
+  .contact-wrap{text-align:center; max-width:640px; margin:0 auto;}
+  .contact-wrap h2{font-family:var(--disp); font-size:clamp(1.8rem,4vw,2.8rem); margin-bottom:18px;}
+  .contact-wrap p{color:var(--muted); margin-bottom:34px; line-height:1.7;}
+  .contact-links{display:flex; justify-content:center; gap:18px; flex-wrap:wrap;}
+  footer{text-align:center; padding:30px; font-family:var(--mono); font-size:.75rem; color:var(--muted); border-top:1px solid var(--line);}
+
+  @media (max-width:680px){
+    .navlinks{position:fixed; top:62px; right:0; left:0; background:var(--bg); flex-direction:column; padding:20px 6vw; border-bottom:1px solid var(--line); display:none; gap:16px;}
+    .navlinks.open{display:flex;}
+    .menu-toggle{display:block;}
+    section{padding:90px 6vw 60px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="glow"></div>
+
+<nav>
+  <div class="brand"><span class="dot"></span>Mohammad Azimi <span style="color:var(--muted)">// devops</span></div>
+  <div class="navlinks" id="navlinks">
+    <a href="#about">about</a>
+    <a href="#experience">experience</a>
+    <a href="#skills">skills</a>
+    <a href="#education">education</a>
+    <a href="#contact" class="resume-btn">contact</a>
+  </div>
+  <button class="menu-toggle" id="menuToggle">☰</button>
+</nav>
+
+<section class="hero">
+  <div class="eyebrow">SYSTEM STATUS: AVAILABLE FOR HIRE</div>
+  <h1 class="title">Mohammad Azimi<br><span class="accent">DevOps Engineer.</span></h1>
+  <div class="typed-wrap"><span class="prompt">~$</span> <span id="typed"></span><span class="cursor"></span></div>
+  <p class="hero-sub">I build infrastructure that doesn't page anyone at 3am. Kubernetes, GitOps, and automation — turning fragile deploys into systems people forget are running, because they just work.</p>
+  <div class="hero-cta">
+    <a href="#experience" class="btn primary">View experience →</a>
+    <a href="#contact" class="btn ghost">Get in touch</a>
+  </div>
+
+  <div class="topo">
+    <svg viewBox="0 0 420 420">
+      <g class="edges">
+        <line class="edge" x1="210" y1="210" x2="80" y2="100"/>
+        <line class="edge" x1="210" y1="210" x2="340" y2="100"/>
+        <line class="edge" x1="210" y1="210" x2="60" y2="260"/>
+        <line class="edge" x1="210" y1="210" x2="360" y2="270"/>
+        <line class="edge" x1="210" y1="210" x2="210" y2="370"/>
+        <line class="edge" x1="80" y1="100" x2="340" y2="100"/>
+        <line class="edge" x1="60" y1="260" x2="360" y2="270"/>
+      </g>
+      <circle class="node-core" cx="210" cy="210" r="34"/>
+      <circle class="node" cx="80" cy="100" r="16"/>
+      <circle class="node" cx="340" cy="100" r="16"/>
+      <circle class="node" cx="60" cy="260" r="16"/>
+      <circle class="node" cx="360" cy="270" r="16"/>
+      <circle class="node" cx="210" cy="370" r="16"/>
+      <circle class="pkt" r="4">
+        <animateMotion dur="3.2s" repeatCount="indefinite" path="M210,210 L80,100"/>
+      </circle>
+      <circle class="pkt" r="4">
+        <animateMotion dur="2.6s" repeatCount="indefinite" path="M210,210 L360,270"/>
+      </circle>
+      <circle class="pkt" r="4">
+        <animateMotion dur="3.8s" repeatCount="indefinite" path="M210,210 L210,370"/>
+      </circle>
+      <circle class="pkt" r="4">
+        <animateMotion dur="3s" repeatCount="indefinite" path="M210,210 L340,100"/>
+      </circle>
+    </svg>
+  </div>
+
+  <div class="scroll-cue"><span class="line"></span>SCROLL</div>
+</section>
+
+<section id="about">
+  <div class="sec-head"><span class="sec-num">01</span><span class="sec-title">About</span><div class="sec-rule"></div></div>
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <p>Results-driven DevOps engineer with a strong ability to <strong>identify, analyze, and resolve</strong> complex technical problems in high-pressure environments. I design scalable, secure systems while streamlining the path from commit to production.</p>
+      <p>Passionate about <strong>automation and infrastructure optimization</strong> — the kind of work that's invisible when it's going well. Known for a hands-on approach, attention to detail, and a relentless drive to find the root cause and fix it for good, not just patch the symptom.</p>
+    </div>
+    <div class="meta-card reveal">
+      <div class="meta-row"><span class="k">LOCATION</span><span class="v">Tehran, Iran</span></div>
+      <div class="meta-row"><span class="k">EMAIL</span><span class="v">azimi.jozani.mohammad@gmail.com</span></div>
+      <div class="meta-row"><span class="k">PHONE</span><span class="v">+98 936 942 0788</span></div>
+      <div class="meta-row"><span class="k">WEBSITE</span><span class="v"><a href="https://mamadazimi.ir/" target="_blank">mamadazimi.ir</a></span></div>
+      <div class="meta-row"><span class="k">FOCUS</span><span class="v">Kubernetes · GitOps · IaC</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="experience">
+  <div class="sec-head"><span class="sec-num">02</span><span class="sec-title">Experience</span><div class="sec-rule"></div></div>
+  <div class="timeline">
+
+    <div class="tl-item reveal">
+      <div class="tl-dot"></div>
+      <div class="tl-head">
+        <span class="tl-role">DevOps Engineer · Paratech</span>
+        <span class="tl-date">Nov 2025 — Mar 2026</span>
+      </div>
+      <div class="tl-org">Iran</div>
+      <ul class="tl-list">
+        <li>Deployed and managed HashiCorp Vault for secrets management, integrated with GitHub CI/CD pipelines.</li>
+        <li>Migrated manual kubectl-based workflows to a GitOps model with ArgoCD, improving deployment reliability and traceability.</li>
+        <li>Rolled out Loki, Promtail, and Jaeger across every cluster for centralized logging and tracing, connected to Grafana.</li>
+        <li>Built Cloudflare Tunnels for services without public IPs, and secured SSH access via Cloudflare's web-based, authenticated sessions.</li>
+        <li>Migrated the habitomic.com production app from AWS to Hetzner infrastructure.</li>
+        <li>Set up Squid-based VPN access for ArvanCloud pods across staging and production.</li>
+        <li>Deployed Mattermost for ChatOps, wiring up webhooks and GitLab CI integration for real-time build and deployment notifications.</li>
+        <li>Migrated container management from Portainer to Rancher for fine-grained, project-based access control.</li>
+      </ul>
+    </div>
+
+    <div class="tl-item reveal">
+      <div class="tl-dot"></div>
+      <div class="tl-head">
+        <span class="tl-role">DevOps Engineer · Omidpay</span>
+        <span class="tl-date">Dec 2024 — Nov 2025</span>
+      </div>
+      <div class="tl-org">Tehran, Iran</div>
+      <ul class="tl-list">
+        <li>Set up a high-availability 3-node Kubernetes master cluster for fault-tolerant control plane performance.</li>
+        <li>Automated configuration of 14 Linux servers with Ansible, ensuring consistent, repeatable environments.</li>
+        <li>Built an Ansible playbook to deploy Node Exporter fleet-wide, integrated with Prometheus and Grafana for real-time monitoring.</li>
+        <li>Automated 100% of server provisioning and updates, eliminating manual intervention entirely.</li>
+        <li>Migrated legacy Docker deployments to a GitOps workflow with ArgoCD, Kubernetes, and Helm.</li>
+        <li>Replaced the legacy registry in Nexus with Harbor for secure, role-based container image management, keeping Nexus as a caching proxy.</li>
+      </ul>
+    </div>
+
+    <div class="tl-item reveal">
+      <div class="tl-dot"></div>
+      <div class="tl-head">
+        <span class="tl-role">DevOps Engineer · ITRC</span>
+        <span class="tl-date">Nov 2023 — Dec 2024</span>
+      </div>
+      <div class="tl-org">Tehran, Iran</div>
+      <ul class="tl-list">
+        <li>Implemented a reverse proxy solution to work around limited public IP availability, improving service accessibility and security.</li>
+        <li>Issued and managed SSL certificates for website security.</li>
+        <li>Adopted Ansible as Infrastructure as Code, automating provisioning and configuration to cut manual errors.</li>
+        <li>Designed RBAC and Network Policies in Kubernetes to secure access and intra-cluster communication.</li>
+        <li>Implemented zero-downtime rolling updates and Ingress-managed traffic routing.</li>
+        <li>Deployed a Pod Autoscaler to dynamically manage resources based on workload demand.</li>
+        <li>Designed and deployed an HA Kubernetes architecture with dual master nodes for production fault tolerance.</li>
+      </ul>
+    </div>
+
+    <div class="tl-item reveal">
+      <div class="tl-dot"></div>
+      <div class="tl-head">
+        <span class="tl-role">DevOps Engineer · ITRC</span>
+        <span class="tl-date">Oct 2022 — Nov 2023</span>
+      </div>
+      <div class="tl-org">Tehran, Iran</div>
+      <ul class="tl-list">
+        <li>Implemented CI and automated testing with teams, cutting deployment time and improving code quality.</li>
+        <li>Managed Jenkins and Docker for build automation and containerization.</li>
+        <li>Stood up Prometheus and Grafana for system performance monitoring.</li>
+        <li>Reduced Docker image sizes via multi-stage builds and dependency cleanup, streamlining the build pipeline.</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<section id="skills">
+  <div class="sec-head"><span class="sec-num">03</span><span class="sec-title">Skills</span><div class="sec-rule"></div></div>
+  <div class="skill-groups">
+    <div class="skill-card reveal">
+      <h4>ORCHESTRATION</h4>
+      <div class="tag-row">
+        <span class="tag">Kubernetes</span><span class="tag">Docker</span><span class="tag">Helm</span><span class="tag">Rancher</span>
+      </div>
+    </div>
+    <div class="skill-card reveal">
+      <h4>AUTOMATION & IaC</h4>
+      <div class="tag-row">
+        <span class="tag">Ansible</span><span class="tag">ArgoCD</span><span class="tag">GitOps</span><span class="tag">Jenkins</span>
+      </div>
+    </div>
+    <div class="skill-card reveal">
+      <h4>OBSERVABILITY</h4>
+      <div class="tag-row">
+        <span class="tag">Prometheus</span><span class="tag">Grafana</span><span class="tag">Loki</span><span class="tag">Jaeger</span>
+      </div>
+    </div>
+    <div class="skill-card reveal">
+      <h4>SECURITY & NETWORKING</h4>
+      <div class="tag-row">
+        <span class="tag">HashiCorp Vault</span><span class="tag">Cloudflare Tunnel</span><span class="tag">RBAC</span><span class="tag">SSL/TLS</span>
+      </div>
+    </div>
+    <div class="skill-card reveal">
+      <h4>PLATFORMS</h4>
+      <div class="tag-row">
+        <span class="tag">Linux</span><span class="tag">AWS</span><span class="tag">Hetzner</span><span class="tag">ArvanCloud</span>
+      </div>
+    </div>
+    <div class="skill-card reveal">
+      <h4>COLLABORATION</h4>
+      <div class="tag-row">
+        <span class="tag">Mattermost</span><span class="tag">GitLab CI</span><span class="tag">GitHub Actions</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="education">
+  <div class="sec-head"><span class="sec-num">04</span><span class="sec-title">Education</span><div class="sec-rule"></div></div>
+  <div class="edu-card reveal">
+    <div>
+      <h4>Bachelor of Physics</h4>
+      <div class="org">Imam Khomeini International University — Qazvin, Iran</div>
+      <p class="note">A national university founded after the Islamic Revolution, with its founding charter ratified by the Iranian Parliament in 1984.</p>
+    </div>
+    <div class="edu-side">2013 — 2017</div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="contact-wrap">
+    <h2>Let's build something reliable.</h2>
+    <p>Open to DevOps, SRE, and platform engineering roles. Reach out directly — I usually reply within a day.</p>
+    <div class="contact-links">
+      <a href="mailto:azimi.jozani.mohammad@gmail.com" class="btn primary">✉ Email me</a>
+      <a href="tel:+989369420788" class="btn ghost">☎ +98 936 942 0788</a>
+      <a href="https://mamadazimi.ir/" target="_blank" class="btn ghost">🌐 mamadazimi.ir</a>
+    </div>
+  </div>
+</section>
+
+<footer>© 2026 Mohammad Azimi — built with care, deployed with confidence.</footer>
+
+<script>
+  // typing animation
+  const phrases = ["building self-healing infrastructure.", "automating the boring parts.", "shipping with zero downtime."];
+  const typedEl = document.getElementById('typed');
+  let pi=0, ci=0, deleting=false;
+  function tick(){
+    const phrase = phrases[pi];
+    if(!deleting){
+      ci++;
+      typedEl.textContent = phrase.slice(0,ci);
+      if(ci===phrase.length){ deleting=true; setTimeout(tick, 1600); return; }
+    } else {
+      ci--;
+      typedEl.textContent = phrase.slice(0,ci);
+      if(ci===0){ deleting=false; pi=(pi+1)%phrases.length; }
+    }
+    setTimeout(tick, deleting?35:55);
+  }
+  tick();
+
+  // scroll reveal
+  const obs = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); } });
+  }, {threshold:0.15});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+  // mobile nav
+  const menuToggle = document.getElementById('menuToggle');
+  const navlinks = document.getElementById('navlinks');
+  menuToggle.addEventListener('click', ()=> navlinks.classList.toggle('open'));
+  navlinks.querySelectorAll('a').forEach(a=>a.addEventListener('click', ()=>navlinks.classList.remove('open')));
+</script>
+
+</body>
+</html>
